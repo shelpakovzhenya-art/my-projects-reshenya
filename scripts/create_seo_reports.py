@@ -223,11 +223,11 @@ def why_for(title, action):
 
 
 def add_tz_text(doc, rows):
-    for priority, title, action in rows:
+    for index, (_priority, title, action) in enumerate(rows, start=1):
         head = doc.add_paragraph()
         head.paragraph_format.space_before = Pt(8)
         head.paragraph_format.space_after = Pt(2)
-        run = head.add_run(f"{priority}. {title}")
+        run = head.add_run(f"{index}. {title}")
         run.bold = True
         run.font.size = Pt(11)
 
@@ -324,16 +324,12 @@ def configure_document(doc):
 def add_footer(doc):
     footer = doc.sections[0].footer
     p = footer.paragraphs[0]
-    p.alignment = WD_ALIGN_PARAGRAPH.RIGHT
-    run = p.add_run(f"SEO ТЗ, {TODAY}")
-    run.font.size = Pt(9)
-    run.font.color.rgb = RGBColor(90, 90, 90)
+    p.text = ""
 
 
 def build_report(data):
     doc = Document()
     configure_document(doc)
-    add_footer(doc)
 
     title = doc.add_paragraph()
     title.paragraph_format.space_after = Pt(3)
@@ -342,12 +338,6 @@ def build_report(data):
     run.font.size = Pt(20)
     run.font.color.rgb = RGBColor.from_string("1F4D78")
     run.bold = True
-
-    meta = doc.add_paragraph()
-    meta.add_run("Сайт: ").bold = True
-    meta.add_run(data["url"])
-    meta.add_run(" | Дата: ").bold = True
-    meta.add_run(TODAY)
 
     doc.add_heading("Сделано", level=1)
     add_bullets(doc, data["done"])
