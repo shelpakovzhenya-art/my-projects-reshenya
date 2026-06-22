@@ -200,6 +200,50 @@ def add_bullets(doc, items):
         p.add_run(item)
 
 
+def why_for(title, action):
+    text = f"{title} {action}".lower()
+    checks = [
+        ("index.php", "Чтобы не индексировалась вторая версия главной или разделов и не появлялись дубли страниц."),
+        ("canonical", "Чтобы Яндекс и Google понимали основной URL страницы и не выбирали дубль самостоятельно."),
+        ("302", "Чтобы поисковые системы воспринимали переезд URL как постоянный, а не временный."),
+        ("php", "Чтобы снизить технические риски и риски безопасности из-за устаревшей версии PHP."),
+        ("h1", "Чтобы на странице был один главный заголовок и понятная структура документа."),
+        ("product seo", "Чтобы страницы продуктов не конкурировали между собой одинаковыми title и description."),
+        ("sitemap", "Чтобы поисковые системы получали актуальный список индексируемых страниц без старых и ошибочных URL."),
+        ("параметр", "Чтобы UTM, сортировки и служебные параметры не создавали дубли страниц или 404-ошибки."),
+        ("слэш", "Чтобы одна и та же страница не открывалась по двум адресам и не расходовала краулинговый бюджет."),
+        ("http", "Чтобы убрать лишние переходы через небезопасный протокол и сократить цепочки редиректов."),
+        ("зеркал", "Чтобы весь вес сайта собирался на одном основном домене, а не делился между http/https и www/non-www."),
+        ("редирект", "Чтобы убрать цепочки и дубли URL, которые мешают индексации и передаче веса страниц."),
+    ]
+    for needle, why in checks:
+        if needle in text:
+            return why
+    return "Чтобы убрать технический дубль или ошибку, которая мешает нормальной индексации сайта."
+
+
+def add_tz_text(doc, rows):
+    for priority, title, action in rows:
+        head = doc.add_paragraph()
+        head.paragraph_format.space_before = Pt(8)
+        head.paragraph_format.space_after = Pt(2)
+        run = head.add_run(f"{priority}. {title}")
+        run.bold = True
+        run.font.size = Pt(11)
+
+        what = doc.add_paragraph()
+        what.paragraph_format.left_indent = Inches(0.25)
+        what.paragraph_format.space_after = Pt(2)
+        what.add_run("Что сделать: ").bold = True
+        what.add_run(action)
+
+        why = doc.add_paragraph()
+        why.paragraph_format.left_indent = Inches(0.25)
+        why.paragraph_format.space_after = Pt(6)
+        why.add_run("Зачем: ").bold = True
+        why.add_run(why_for(title, action))
+
+
 def set_table_width(table, widths):
     tbl = table._tbl
     tbl_pr = tbl.tblPr
@@ -305,23 +349,11 @@ def build_report(data):
     meta.add_run(" | Дата: ").bold = True
     meta.add_run(TODAY)
 
-    doc.add_heading("Задача", level=1)
-    doc.add_paragraph(TASK_SOURCE)
-
-    doc.add_heading("Откуда взяты данные", level=1)
-    doc.add_paragraph(DATA_SOURCE)
-
-    doc.add_heading("Что сделано", level=1)
+    doc.add_heading("Сделано", level=1)
     add_bullets(doc, data["done"])
 
-    doc.add_heading("Факты проверки", level=1)
-    add_bullets(doc, data["facts"])
-
-    doc.add_heading("ТЗ на доработку", level=1)
-    add_tz_table(doc, data["tz"])
-
-    doc.add_heading("Приемка после доработки", level=1)
-    add_bullets(doc, COMMON_ACCEPTANCE)
+    doc.add_heading("Что нужно сделать", level=1)
+    add_tz_text(doc, data["tz"])
 
     path = DOCX_DIR / f"SEO ТЗ - {data['project']}.docx"
     doc.save(path)
