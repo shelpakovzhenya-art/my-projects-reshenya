@@ -1,7 +1,6 @@
 from pathlib import Path
 
 from docx import Document
-from docx.enum.section import WD_SECTION
 from docx.enum.table import WD_TABLE_ALIGNMENT, WD_CELL_VERTICAL_ALIGNMENT
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml import OxmlElement
@@ -9,14 +8,26 @@ from docx.oxml.ns import qn
 from docx.shared import Inches, Pt, RGBColor
 
 
-OUT_DIR = Path.home() / "Downloads"
+ROOT = Path(__file__).resolve().parents[1]
+DOCX_DIR = ROOT / "reports-docx"
 TODAY = "22.06.2026"
 
+TASK_SOURCE = (
+    "Задача: проверить проекты из таблицы доступов, найти SEO-проблемы, "
+    "исправить безопасные пункты в CMS и подготовить ТЗ на оставшиеся правки."
+)
 
-GUIDELINES = [
-    "Яндекс.Вебмастер: канонический адрес страницы, дубли, robots.txt, sitemap.xml, ответы сервера.",
-    "Google Search Central: canonical для дублей, robots.txt, sitemap, редиректы, page metadata.",
-    "Материалы из таблицы знаний: SEO-курсы, Яндекс-сертификация, Rush Academy, Senior/Middle SEO, материалы SEO-сообществ.",
+DATA_SOURCE = (
+    "Данные: таблица доступов Google Sheets, таблица SEO-материалов/курсов, "
+    "публичная проверка сайтов, доступные CMS-админки, результаты проверки через браузер и curl. "
+    "Яндекс.Вебмастер напрямую не проверен: был нужен вход в Яндекс ID."
+)
+
+COMMON_ACCEPTANCE = [
+    "После правок проверить ответы URL через curl или аналогичный инструмент.",
+    "Проверить наличие canonical в HTML целевых страниц.",
+    "Проверить sitemap.xml и robots.txt после изменений.",
+    "После выдачи доступа зайти в Яндекс.Вебмастер и отправить важные страницы на переобход.",
 ]
 
 
@@ -24,21 +35,20 @@ REPORTS = [
     {
         "project": "Фильтр-пресс",
         "url": "https://filter-press.ru/",
-        "access": "Bitrix-админка доступна, вход выполнен. Yandex Webmaster не проверен: браузер остановился на форме входа Яндекс ID.",
-        "summary": "Критичная проблема — отсутствие склейки зеркал: http, https, www и non-www отдают 200 OK. Дополнительно доступен дубль /index.php, а canonical на проверенных страницах не найден.",
-        "fixed": [
-            "Вошел в Bitrix и проверил наличие штатных SEO-разделов: robots.txt, sitemap.xml, Aspro sitemap, Умный SEO.",
-            "Публичный sitemap.xml актуальный по Last-Modified: 16.04.2026, поэтому регенерацию не выполнял.",
-            "Изменений не вносил: проблема зеркал и /index.php требует серверных 301-редиректов, а не контентной правки в CMS.",
+        "done": [
+            "Выполнен вход в Bitrix.",
+            "Проверены разделы robots.txt, sitemap.xml, Aspro sitemap, Умный SEO.",
+            "Публичный sitemap актуальный по Last-Modified: 16.04.2026.",
+            "Правки не вносились: проблема в серверных редиректах и шаблоне canonical.",
         ],
-        "issues": [
-            ("P1", "Склеить зеркала", "Настроить 301: http -> https, www -> non-www. Канонический хост: https://filter-press.ru/."),
-            ("P1", "Закрыть /index.php", "Сделать 301 с /index.php и внутренних index.php на соответствующий URL без index.php."),
-            ("P1", "Добавить canonical", "Включить rel=canonical на главной, разделах, карточках и посадочных страницах."),
-            ("P2", "Параметры URL", "UTM/служебные параметры должны иметь canonical на чистую страницу или редирект."),
+        "tz": [
+            ("P1", "Склеить зеркала", "Настроить 301: http -> https, www -> non-www. Основной адрес: https://filter-press.ru/."),
+            ("P1", "Закрыть /index.php", "Сделать 301 с /index.php и внутренних index.php на URL без index.php."),
+            ("P1", "Добавить canonical", "Вывести rel=canonical на главной, разделах, карточках и посадочных страницах."),
+            ("P2", "Обработать URL-параметры", "UTM и служебные параметры должны вести на чистый URL или иметь canonical на чистую страницу."),
         ],
-        "evidence": [
-            "https://filter-press.ru/, http://filter-press.ru/, https://www.filter-press.ru/ отдают 200 OK.",
+        "facts": [
+            "http, https, www и non-www отдают 200 OK.",
             "https://filter-press.ru/index.php отдает 200 OK.",
             "CMS: 1C-Bitrix, шаблон Aspro Allcorp3.",
         ],
@@ -46,65 +56,62 @@ REPORTS = [
     {
         "project": "Грани",
         "url": "https://gs-best.ru/",
-        "access": "ICMS-доступ рабочий, вход выполнен. Yandex Webmaster не проверен: требуется вход в Яндекс ID.",
-        "summary": "Основная проблема — редиректные цепочки через HTTP и :443, а также отсутствие canonical. Проверенная ранее жалоба на дубли SEO у /o-kompanii не подтвердилась при контрольной проверке: в CMS и на сайте title/description уже уникальные.",
-        "fixed": [
-            "Вошел в ICMS, проверил структуру и SEO-поля страницы /o-kompanii.",
-            "Правку /o-kompanii не выполнял: публичная страница уже отдает уникальный title и description.",
-            "Раздел редиректов ICMS проверен: он управляет внутренними путями, а проблема http/www/:443 возникает до приложения, на сервере.",
+        "done": [
+            "Выполнен вход в ICMS.",
+            "Проверена страница /o-kompanii в структуре сайта.",
+            "Проверены SEO-поля /o-kompanii: title и description заполнены и отличаются от главной.",
+            "Раздел редиректов ICMS проверен. Проблема http/www/:443 находится на серверном уровне.",
         ],
-        "issues": [
-            ("P1", "Исправить редиректные цепочки", "Настроить сервер: сразу вести на https://gs-best.ru/... без www, без HTTP-шага и без :443 в Location."),
+        "tz": [
+            ("P1", "Исправить редиректные цепочки", "Настроить переход сразу на https://gs-best.ru/... без www, без HTTP-шага и без :443 в Location."),
             ("P1", "Добавить canonical", "В шаблоне сайта вывести rel=canonical для чистого URL страницы."),
-            ("P2", "Параметры URL", "Для UTM/sort/прочих параметров нужен canonical на чистый URL или редирект."),
-            ("P2", "Проверить sitemap", "В sitemap должны оставаться только финальные URL без редиректов."),
+            ("P2", "Обработать URL-параметры", "Для UTM, sort и других параметров настроить canonical на чистый URL или 301-редирект."),
+            ("P2", "Проверить sitemap", "В sitemap должны быть только финальные URL без редиректов."),
         ],
-        "evidence": [
-            "https://gs-best.ru/o-kompanii отдает title: О компании | Студия природного камня «Грани» | Грани.",
-            "В ICMS у /o-kompanii заполнены seo_title и seo_description.",
-            "Редиректы вида /o-kompanii/ проходят через HTTP и https://gs-best.ru:443/.",
+        "facts": [
+            "Редиректы проходят через HTTP и https://gs-best.ru:443/.",
+            "Страница /o-kompanii имеет отдельные SEO title и description.",
+            "CMS: ICMS.",
         ],
     },
     {
         "project": "Аквабурмастер",
         "url": "https://aquaburmaster.ru/",
-        "access": "ICMS-доступ рабочий, вход выполнен. Вебмастер не проверен без входа Яндекс ID. По постановке favicon игнорировался.",
-        "summary": "Критичная проблема — URL со слэшем редиректятся на главную: /uslugi/ -> / и /kontakty/ -> /. Это может склеивать важные страницы с главной. Также отсутствует canonical, а публичный sitemap.xml остался старым файлом 2018 года.",
-        "fixed": [
-            "Вошел в ICMS v3.5.46 и открыл SEO-раздел.",
-            "Запустил штатную генерацию sitemap.xml; CMS вернула сообщение: Файл sitemap.xml сгенерирован.",
-            "Контроль показал, что публичный sitemap.xml не обновился: в нем остался комментарий mysitemapgenerator.com и lastmod 2018. Исправление не засчитано как выполненное.",
-            "Проверил список SEO-редиректов: правил /uslugi/ -> / и /kontakty/ -> / нет, значит проблема в роутере/сервере.",
+        "done": [
+            "Выполнен вход в ICMS v3.5.46.",
+            "Открыт SEO-раздел.",
+            "Запущена штатная генерация sitemap.xml. CMS показала успешное сохранение.",
+            "Публичная проверка показала, что sitemap.xml не обновился. Правка не засчитана как завершенная.",
+            "Проверены SEO-редиректы: правил /uslugi/ -> / и /kontakty/ -> / в списке нет.",
         ],
-        "issues": [
+        "tz": [
             ("P1", "Исправить редиректы со слэшем", "Сделать /uslugi/ -> /uslugi и /kontakty/ -> /kontakty либо выбрать единый формат URL без редиректа на главную."),
             ("P1", "Добавить canonical", "Вывести canonical на главной, разделах, статьях и услугах."),
-            ("P2", "Починить генерацию sitemap", "Проверить права записи и путь генератора: публичный sitemap.xml не меняется после генерации в CMS."),
-            ("P2", "Обновить PHP", "Сайт раскрывает X-Powered-By: PHP/5.6.40; версия устаревшая и небезопасная."),
+            ("P2", "Починить генерацию sitemap", "Проверить путь и права записи: публичный sitemap.xml не меняется после генерации в CMS."),
+            ("P2", "Обновить PHP", "Сайт раскрывает X-Powered-By: PHP/5.6.40. Версия устаревшая."),
         ],
-        "evidence": [
-            "https://aquaburmaster.ru/uslugi/ -> 301 на https://aquaburmaster.ru/.",
-            "https://aquaburmaster.ru/kontakty/ -> 301 на https://aquaburmaster.ru/.",
-            "sitemap.xml: Last-Modified 26.09.2018, created with mysitemapgenerator.com.",
+        "facts": [
+            "https://aquaburmaster.ru/uslugi/ редиректит на главную.",
+            "https://aquaburmaster.ru/kontakty/ редиректит на главную.",
+            "sitemap.xml остался файлом 2018 года с генератором mysitemapgenerator.com.",
         ],
     },
     {
         "project": "Московская застава",
         "url": "https://mzastava.ru/",
-        "access": "Bitrix-админка найдена, но логин из таблицы не сработал: форма вернула Неверный логин или пароль. Yandex Webmaster не проверен без входа Яндекс ID.",
-        "summary": "Основные проблемы: редиректы без слэша уходят через HTTP, /index.php отдает 200 OK, canonical отсутствует, sitemap.xml устарел с 2022 года. Из-за недействующего доступа правки не выполнялись.",
-        "fixed": [
-            "Проверил доступ к /bitrix/admin/: форма доступна.",
-            "Один раз попробовал вход по данным из таблицы; получил ошибку Неверный логин или пароль.",
-            "Повторные попытки не выполнял, чтобы не спровоцировать блокировку.",
+        "done": [
+            "Проверена доступность /bitrix/admin/.",
+            "Вход по данным из таблицы не сработал: форма вернула ошибку неверного логина или пароля.",
+            "Повторные попытки входа не выполнялись, чтобы не вызвать блокировку.",
+            "Правки не вносились из-за отсутствия рабочего доступа.",
         ],
-        "issues": [
-            ("P1", "Исправить HTTP в редиректах", "https://mzastava.ru/offers должен сразу вести на https://mzastava.ru/offers/, без промежуточного http."),
+        "tz": [
+            ("P1", "Исправить HTTP в редиректах", "https://mzastava.ru/offers должен сразу вести на https://mzastava.ru/offers/ без промежуточного http."),
             ("P1", "Закрыть /index.php", "Настроить 301 с /index.php на /."),
             ("P1", "Добавить canonical", "Вывести canonical на главной и типовых страницах."),
             ("P2", "Перегенерировать sitemap", "Текущий Last-Modified: 03.08.2022. Нужна пересборка из Bitrix."),
         ],
-        "evidence": [
+        "facts": [
             "CMS: 1C-Bitrix.",
             "sitemap.xml: Last-Modified 03.08.2022.",
             "https://mzastava.ru/index.php отдает 200 OK.",
@@ -113,42 +120,39 @@ REPORTS = [
     {
         "project": "Красная мельница",
         "url": "https://www.kmel.ru/",
-        "access": "ICMS-доступ рабочий, вход выполнен. Yandex Webmaster не проверен: требуется вход в Яндекс ID.",
-        "summary": "Ключевые технические проблемы: параметры на валидных страницах дают 404, canonical отсутствует, слэш/без слэша местами редиректится 302, /index.php идет через лишний HTTP-шаг. Безопасная контентная правка выполнена: обновлен meta description главной.",
-        "fixed": [
-            "Вошел в ICMS v2.2.",
-            "В редакторе главной страницы заменил переспамленный meta description на естественное описание.",
+        "done": [
+            "Выполнен вход в ICMS v2.2.",
+            "В редакторе главной страницы заменен переспамленный meta description.",
             "Публичная проверка подтвердила новый meta description на главной.",
         ],
-        "issues": [
-            ("P1", "Параметры не должны давать 404", "UTM и служебные параметры должны отдавать чистую страницу с canonical или редиректиться на чистый URL."),
+        "tz": [
+            ("P1", "Параметры не должны давать 404", "UTM и служебные параметры должны открывать страницу с canonical или редиректиться на чистый URL."),
             ("P1", "Добавить canonical", "Вывести canonical на главной, /about_us, /catalog, /catalog/1-4, /contacts."),
             ("P2", "302 заменить на 301", "Слэш/без слэша должен редиректиться постоянным 301."),
-            ("P2", "Убрать лишние HTTP-цепочки", "/index.php должен сразу вести на https://www.kmel.ru/."),
+            ("P2", "Убрать HTTP-цепочку", "/index.php должен сразу вести на https://www.kmel.ru/."),
         ],
-        "evidence": [
-            "Измененный description: Красная мельница — женская одежда из льна от производителя в Костроме. Каталог льняной одежды оптом и в розницу, натуральные ткани, доставка и условия сотрудничества.",
-            "https://www.kmel.ru/?utm_source=test -> 404.",
-            "https://www.kmel.ru/catalog/ -> 302 -> /catalog.",
+        "facts": [
+            "Новый description: Красная мельница — женская одежда из льна от производителя в Костроме. Каталог льняной одежды оптом и в розницу, натуральные ткани, доставка и условия сотрудничества.",
+            "https://www.kmel.ru/?utm_source=test отдает 404.",
+            "https://www.kmel.ru/catalog/ редиректит 302 на /catalog.",
         ],
     },
     {
         "project": "Витали",
         "url": "https://vitalikostroma.ru/",
-        "access": "ICMS-доступ рабочий, вход выполнен. Yandex Webmaster не проверен: в таблице отмечено, что его надо сделать.",
-        "summary": "Сильная зона риска — дубли слэш/без слэша и параметров отдают 200 OK, canonical отсутствует. У разделов продуктов одинаковые title, нет description, на страницах встречается по два H1. В админке разделов каталога нет SEO-полей, поэтому безопасной CMS-правки не нашлось.",
-        "fixed": [
-            "Вошел в ICMS v2.2.",
-            "Открыл каталог и редактор раздела 39: есть поля названия, состава, описания, изображений и статуса.",
-            "SEO-title, meta description и canonical-полей в редакторе раздела не найдено; правки не выполнялись, чтобы не менять контент вместо шаблона.",
+        "done": [
+            "Выполнен вход в ICMS v2.2.",
+            "Открыт каталог и редактор раздела 39.",
+            "В редакторе раздела найдены поля названия, состава, описания, изображений и статуса.",
+            "SEO title, meta description и canonical-полей в редакторе не найдено. Контентные правки не выполнялись.",
         ],
-        "issues": [
-            ("P1", "Склеить слэш/без слэша", "Выбрать формат из sitemap и настроить 301 на него для /catalog, /catalog/vitalgar, /products/39 и др."),
+        "tz": [
+            ("P1", "Склеить слэш/без слэша", "Выбрать формат из sitemap и настроить 301 для /catalog, /catalog/vitalgar, /products/39 и аналогичных URL."),
             ("P1", "Добавить canonical", "В шаблоне главной, каталога и product-разделов вывести canonical на чистый URL."),
             ("P2", "Уникализировать product SEO", "Для /products/39, /products/30, /products/31 нужны уникальные title и description."),
             ("P2", "Оставить один H1", "В шаблоне product-раздела второй H1 заменить на H2/H3 или заголовок блока."),
         ],
-        "evidence": [
+        "facts": [
             "/products/39 и /products/39/ отдают 200 OK.",
             "/products/39?p=1 отдает дубль с 200 OK.",
             "Редактор раздела 39 не содержит SEO-полей.",
@@ -164,14 +168,30 @@ def set_cell_shading(cell, fill):
     tc_pr.append(shd)
 
 
+def set_cell_margins(cell, top=80, start=120, bottom=80, end=120):
+    tc = cell._tc
+    tc_pr = tc.get_or_add_tcPr()
+    tc_mar = tc_pr.first_child_found_in("w:tcMar")
+    if tc_mar is None:
+        tc_mar = OxmlElement("w:tcMar")
+        tc_pr.append(tc_mar)
+    for m, value in {"top": top, "start": start, "bottom": bottom, "end": end}.items():
+        node = tc_mar.find(qn(f"w:{m}"))
+        if node is None:
+            node = OxmlElement(f"w:{m}")
+            tc_mar.append(node)
+        node.set(qn("w:w"), str(value))
+        node.set(qn("w:type"), "dxa")
+
+
 def set_cell_text(cell, text, bold=False):
     cell.text = ""
     p = cell.paragraphs[0]
+    p.paragraph_format.space_after = Pt(2)
     run = p.add_run(text)
     run.bold = bold
-    for paragraph in cell.paragraphs:
-        paragraph.paragraph_format.space_after = Pt(2)
-    cell.vertical_alignment = WD_CELL_VERTICAL_ALIGNMENT.CENTER
+    cell.vertical_alignment = WD_CELL_VERTICAL_ALIGNMENT.TOP
+    set_cell_margins(cell)
 
 
 def add_bullets(doc, items):
@@ -180,23 +200,46 @@ def add_bullets(doc, items):
         p.add_run(item)
 
 
-def add_issue_table(doc, issues):
+def set_table_width(table, widths):
+    tbl = table._tbl
+    tbl_pr = tbl.tblPr
+    tbl_w = tbl_pr.first_child_found_in("w:tblW")
+    if tbl_w is None:
+        tbl_w = OxmlElement("w:tblW")
+        tbl_pr.append(tbl_w)
+    tbl_w.set(qn("w:type"), "dxa")
+    tbl_w.set(qn("w:w"), "9360")
+    tbl_ind = tbl_pr.first_child_found_in("w:tblInd")
+    if tbl_ind is None:
+        tbl_ind = OxmlElement("w:tblInd")
+        tbl_pr.append(tbl_ind)
+    tbl_ind.set(qn("w:type"), "dxa")
+    tbl_ind.set(qn("w:w"), "120")
+    grid = tbl.tblGrid
+    for child in list(grid):
+        grid.remove(child)
+    for width in widths:
+        col = OxmlElement("w:gridCol")
+        col.set(qn("w:w"), str(width))
+        grid.append(col)
+
+
+def add_tz_table(doc, rows):
     table = doc.add_table(rows=1, cols=3)
     table.alignment = WD_TABLE_ALIGNMENT.LEFT
     table.style = "Table Grid"
-    widths = [Inches(0.7), Inches(1.8), Inches(4.0)]
-    headers = ["Приоритет", "Пункт", "Что сделать"]
+    widths = [900, 2460, 6000]
+    set_table_width(table, widths)
+    headers = ["Приоритет", "Задача", "Что сделать"]
     for i, header in enumerate(headers):
         cell = table.rows[0].cells[i]
         set_cell_text(cell, header, bold=True)
         set_cell_shading(cell, "E8EEF5")
-        cell.width = widths[i]
-    for priority, title, action in issues:
+    for priority, title, action in rows:
         row = table.add_row()
         values = [priority, title, action]
         for i, value in enumerate(values):
             set_cell_text(row.cells[i], value)
-            row.cells[i].width = widths[i]
 
 
 def configure_document(doc):
@@ -227,13 +270,18 @@ def configure_document(doc):
         style.paragraph_format.space_before = Pt(before)
         style.paragraph_format.space_after = Pt(after)
 
+    bullet = styles["List Bullet"]
+    bullet.font.name = "Calibri"
+    bullet.font.size = Pt(11)
+    bullet.paragraph_format.space_after = Pt(4)
+    bullet.paragraph_format.line_spacing = 1.25
+
 
 def add_footer(doc):
-    section = doc.sections[0]
-    footer = section.footer
+    footer = doc.sections[0].footer
     p = footer.paragraphs[0]
     p.alignment = WD_ALIGN_PARAGRAPH.RIGHT
-    run = p.add_run(f"SEO-аудит, {TODAY}")
+    run = p.add_run(f"SEO ТЗ, {TODAY}")
     run.font.size = Pt(9)
     run.font.color.rgb = RGBColor(90, 90, 90)
 
@@ -245,7 +293,7 @@ def build_report(data):
 
     title = doc.add_paragraph()
     title.paragraph_format.space_after = Pt(3)
-    run = title.add_run(f"SEO-отчет: {data['project']}")
+    run = title.add_run(f"SEO ТЗ: {data['project']}")
     run.font.name = "Calibri"
     run.font.size = Pt(20)
     run.font.color.rgb = RGBColor.from_string("1F4D78")
@@ -254,42 +302,34 @@ def build_report(data):
     meta = doc.add_paragraph()
     meta.add_run("Сайт: ").bold = True
     meta.add_run(data["url"])
-    meta.add_run(" | Дата проверки: ").bold = True
+    meta.add_run(" | Дата: ").bold = True
     meta.add_run(TODAY)
 
-    doc.add_heading("Краткое резюме", level=1)
-    doc.add_paragraph(data["summary"])
+    doc.add_heading("Задача", level=1)
+    doc.add_paragraph(TASK_SOURCE)
 
-    doc.add_heading("Доступы и Вебмастер", level=1)
-    doc.add_paragraph(data["access"])
-    doc.add_paragraph("Важно: favicon не исправлялся и не считался блокером, как указано в постановке задачи.")
+    doc.add_heading("Откуда взяты данные", level=1)
+    doc.add_paragraph(DATA_SOURCE)
 
-    doc.add_heading("Что проверено и исправлено", level=1)
-    add_bullets(doc, data["fixed"])
+    doc.add_heading("Что сделано", level=1)
+    add_bullets(doc, data["done"])
 
-    doc.add_heading("Оставшиеся задачи", level=1)
-    add_issue_table(doc, data["issues"])
+    doc.add_heading("Факты проверки", level=1)
+    add_bullets(doc, data["facts"])
 
-    doc.add_heading("Доказательства проверки", level=1)
-    add_bullets(doc, data["evidence"])
+    doc.add_heading("ТЗ на доработку", level=1)
+    add_tz_table(doc, data["tz"])
 
-    doc.add_heading("Использованный SEO-чеклист", level=1)
-    add_bullets(doc, GUIDELINES)
+    doc.add_heading("Приемка после доработки", level=1)
+    add_bullets(doc, COMMON_ACCEPTANCE)
 
-    doc.add_heading("Следующий шаг", level=1)
-    doc.add_paragraph(
-        "После правок редиректов и canonical нужно заново проверить сайт в Яндекс.Вебмастере и отправить переобход важных страниц. "
-        "Для проектов с недоступным Вебмастером сначала нужен вход в Яндекс ID или выдача доступа на рабочий аккаунт."
-    )
-
-    filename = f"SEO отчет - {data['project']}.docx"
-    path = OUT_DIR / filename
+    path = DOCX_DIR / f"SEO ТЗ - {data['project']}.docx"
     doc.save(path)
     return path
 
 
 def main():
-    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    DOCX_DIR.mkdir(parents=True, exist_ok=True)
     created = [build_report(report) for report in REPORTS]
     for path in created:
         print(path)
