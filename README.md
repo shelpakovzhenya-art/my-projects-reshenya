@@ -9,6 +9,8 @@ SEO-ТЗ по проектам от 22.06.2026.
 - `render-check-png/` - рендеры для проверки открытия документов.
 - `reports-text/` - короткие текстовые проверки по отдельным проектам.
 - `site-backups/` - бэкапы перед CMS-правками.
+- `scripts/create_seo_reports.py` - сборка DOCX.
+- `scripts/create_pdf_render_checks.py` - сборка PDF и PNG-рендеров.
 
 ## Формат документов
 

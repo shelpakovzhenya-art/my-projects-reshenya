@@ -7,6 +7,7 @@
 1. `/favicon.ico` больше не отдает 404: добавлен 301 на `/favicon.png`.
 2. `/favicon.svg` больше не отдает 404: добавлен 301 на `/favicon.png`.
 3. Текущий `/favicon.png` отдает 200.
+4. `/prays_list` больше не отдает 404: страница в CMS переведена из статуса `Редактируется` в `Опубликован`.
 
 Что висит:
 
@@ -14,7 +15,7 @@
 2. `/kontakty/` редиректит на главную, а должен вести на `/kontakty`.
 3. Такой же редирект на главную есть у `/stati/`, `/galereya/`, `/prays_list/`.
 4. `sitemap.xml` старый: файл сгенерирован через `mysitemapgenerator.com`, `Last-Modified: 26.09.2018`.
-5. `canonical` на главной, `/uslugi` и `/kontakty` не найден.
+5. `canonical` на главной, `/uslugi`, `/kontakty`, `/stati`, `/galereya`, `/prays_list` не найден.
 6. Сайт раскрывает `X-Powered-By: PHP/5.6.40`.
 
 Что проверено в CMS:
@@ -25,6 +26,10 @@
 4. Активных правил `/uslugi/ -> /uslugi` и `/kontakty/ -> /kontakty` в CMS нет.
 5. В CMS есть отключенные правила `/__disabled_uslugi_slash_redirect_20260622 -> /uslugi` и `/__disabled_kontakty_slash_redirect_20260622 -> /kontakty`.
 6. Перед правкой favicon сохранен бэкап старых редиректов.
+7. В редакторе страниц структуры есть SEO-поля H1, Title, Description, Keywords и nofollow. Поля canonical или head нет.
+8. В параметрах сайта только логотип, контентные блоки, копирайт, телефон и email. Настройки head/canonical нет.
+9. Раздел `Метрики, информеры` содержит код Яндекс.Метрики, это не место для canonical.
+10. Страница `Прайс-лист` в CMS была в статусе `Редактируется`; после перевода в `Опубликован` публичный `/prays_list` отдает 200.
 
 Что не трогал:
 
@@ -36,7 +41,7 @@
 
 1. Сначала сохранить текущий `.htaccess` и серверные правила.
 2. Исправить серверное правило, которое отправляет URL со слэшем на главную.
-3. После этого проверить точечно: `/uslugi/ -> /uslugi`, `/kontakty/ -> /kontakty`, `/stati/ -> /stati`, `/galereya/ -> /galereya`.
+3. После этого проверить точечно: `/uslugi/ -> /uslugi`, `/kontakty/ -> /kontakty`, `/stati/ -> /stati`, `/galereya/ -> /galereya`, `/prays_list/ -> /prays_list`.
 4. Добавить `canonical` в шаблон `head`.
 5. Починить генерацию `sitemap.xml`: проверить путь и права записи.
 6. Если Вебмастер продолжит ругаться на favicon, добавить реальный SVG или PNG 120 x 120 через файловый доступ.
