@@ -1,0 +1,205 @@
+{
+  "site": "aquaburmaster.ru",
+  "savedAt": "2026-06-30",
+  "purpose": "Before adding favicon redirects in ICMS",
+  "redirects": [
+    {
+      "code": "301",
+      "from": "/kontakty.html",
+      "id": "redirect-1",
+      "to": "/kontakty"
+    },
+    {
+      "code": "301",
+      "from": "/uslugi.html",
+      "id": "redirect-2",
+      "to": "/uslugi"
+    },
+    {
+      "code": "301",
+      "from": "/galereya.html",
+      "id": "redirect-3",
+      "to": "/galereya"
+    },
+    {
+      "code": "301",
+      "from": "/uslugi/burenie-skvazhin.html",
+      "id": "redirect-4",
+      "to": "/uslugi/burenie_skvazhin"
+    },
+    {
+      "code": "301",
+      "from": "/uslugi/stroitelstvo-plastikovogo-kessona.html",
+      "id": "redirect-5",
+      "to": "/uslugi/plastikovye_kessony_bio_s"
+    },
+    {
+      "code": "301",
+      "from": "/stati/34-pochemu-zimoj-skvazhinu-burit-vygodnee.html",
+      "id": "redirect-6",
+      "to": "/stati/pochemu_zimoy_skvazhinu_burit_vygodnee"
+    },
+    {
+      "code": "301",
+      "from": "/uslugi/prokladka-trub-s-greyushchim-kabelem.html",
+      "id": "redirect-7",
+      "to": "/uslugi/prokladka_vodoprovodnoy_truby_s_greyushchim_kabelem"
+    },
+    {
+      "code": "301",
+      "from": "/uslugi/stroitelstvo-betonnogo-kessona.html",
+      "id": "redirect-8",
+      "to": "/uslugi/montazh_betonnogo_kessona"
+    },
+    {
+      "code": "301",
+      "from": "/uslugi/sistemy-vodopodgotovki-i-vodoochistki.html",
+      "id": "redirect-9",
+      "to": "/uslugi/sistemy_vodopodgotovki_i_vodoochistki"
+    },
+    {
+      "code": "301",
+      "from": "/stati/35-instruktsiya-po-ekspluatatsii-skvazhiny-1.html",
+      "id": "redirect-10",
+      "to": "/stati/instrukciya_po_ekspluatacii_skvazhiny"
+    },
+    {
+      "code": "301",
+      "from": "/stati/36-obustrojstvo-skvazhin-1.html",
+      "id": "redirect-11",
+      "to": "/stati/obustroystvo_skvazhin"
+    },
+    {
+      "code": "301",
+      "from": "/uslugi/ustanovka-skvazhinnogo-adaptera.html",
+      "id": "redirect-12",
+      "to": "/uslugi/montazh_skvazhinnogo_adaptera"
+    },
+    {
+      "code": "301",
+      "from": "/uslugi/ustanovka-nasosnoj-stantsii.html",
+      "id": "redirect-13",
+      "to": "/uslugi/montazh_avtomaticheskoy_razdelnoy_nasosnoy_stancii"
+    },
+    {
+      "code": "301",
+      "from": "/stati/28-na-vodu.html",
+      "id": "redirect-14",
+      "to": "/stati/burenie_skvazhin_na_vodu_v_kostrome"
+    },
+    {
+      "code": "301",
+      "from": "/stati/32-burenie-skvazhin-dlya-otopleniya.html",
+      "id": "redirect-15",
+      "to": "/stati/burenie_skvazhin_dlya_otopleniya_doma"
+    },
+    {
+      "code": "301",
+      "from": "/uslugi/prokladka-vodoprovodnyh-trub-i-silovogo-kabelya.html",
+      "id": "redirect-16",
+      "to": "/uslugi/prokladka_vodoprovodnoy_truby_i_silovogo_kabelya"
+    },
+    {
+      "code": "301",
+      "from": "/uslugi/nazemnyy-kesson.html",
+      "id": "redirect-17",
+      "to": "/uslugi/montazh_nazemnogo_kessona"
+    },
+    {
+      "code": "301",
+      "from": "/stati.html",
+      "id": "redirect-18",
+      "to": "/stati"
+    },
+    {
+      "code": "301",
+      "from": "/tseny-na-burenie-skvazhin.html",
+      "id": "redirect-19",
+      "to": "/prays_list"
+    },
+    {
+      "code": "301",
+      "from": "/burenie_skvazhin",
+      "id": "redirect-20",
+      "to": "/uslugi/burenie_skvazhin"
+    },
+    {
+      "code": "301",
+      "from": "/popup.html",
+      "id": "redirect-21",
+      "to": "/"
+    },
+    {
+      "code": "301",
+      "from": "/stati/septiki/preimushchestva_lokalnyh_ochistnyh_stanciy_pered_vygrebnoy_yamoy_i_ee_analoga_v_vide_septika_iz_betonnyh_kolec",
+      "id": "redirect-22",
+      "to": "/stati/septiki/preimushchestva_lokalnyh_ochistnyh_stanciy_pered_vygrebnoy_yamoy"
+    },
+    {
+      "code": "301",
+      "from": "/stati/burenie/obustroystvo_skvazhin_obustroystva_skvazhin_v_kostrome_i_yaroslavle_kompaniya_akvaburmaster",
+      "id": "redirect-23",
+      "to": "/stati/burenie/obustroystvo_skvazhin_obustroystva_skvazhin_v_kostrome_i_yaroslavle"
+    },
+    {
+      "code": "301",
+      "from": "/?do=file-627235",
+      "id": "redirect-24",
+      "to": "/"
+    },
+    {
+      "code": "301",
+      "from": "/?do=file-386892",
+      "id": "redirect-25",
+      "to": "/"
+    },
+    {
+      "code": "301",
+      "from": "/?do=file-86723",
+      "id": "redirect-26",
+      "to": "/"
+    },
+    {
+      "code": "301",
+      "from": "/stati/burenie?page=1&limit=5",
+      "id": "redirect-27",
+      "to": "/stati/burenie"
+    },
+    {
+      "code": "301",
+      "from": "/stati?page=1&limit=5",
+      "id": "redirect-28",
+      "to": "/stati"
+    },
+    {
+      "code": "301",
+      "from": "/uslugi/burenie_skvazhin",
+      "id": "redirect-29",
+      "to": "/burenie_skvazhinn"
+    },
+    {
+      "code": "301",
+      "from": "/__disabled_uslugi_slash_redirect_20260622",
+      "id": "redirect-30",
+      "to": "/uslugi"
+    },
+    {
+      "code": "301",
+      "from": "/__disabled_kontakty_slash_redirect_20260622",
+      "id": "redirect-31",
+      "to": "/kontakty"
+    },
+    {
+      "code": "302",
+      "from": "/googlee06e52a3f1ca4e49.html",
+      "id": "redirect-32",
+      "to": "/upload/files/googlee06e52a3f1ca4e49.html"
+    },
+    {
+      "code": "302",
+      "from": "/yandex_229f44098bec19bc.html",
+      "id": "redirect-33",
+      "to": "/upload/files/yandex_229f44098bec19bc.html"
+    }
+  ]
+}

@@ -82,14 +82,15 @@ REPORTS = [
             "Рекомендации не закрыты: /uslugi/ и /kontakty/ все еще уходят на главную.",
             "Редирект со слэшем идет на серверном уровне до CMS. В списке CMS это не править.",
             "sitemap.xml старый: 2018 год, генератор mysitemapgenerator.com.",
-            "canonical не выводится, favicon.ico и favicon.svg отдают 404.",
+            "Favicon-404 закрыт в CMS: /favicon.ico и /favicon.svg теперь 301 на /favicon.png.",
+            "canonical не выводится.",
             "Яндекс.Вебмастер не открыт: нужен Яндекс ID, рабочего доступа в таблице нет.",
         ],
         "tz": [
             ("P1", "Исправить серверный редирект со слэшем", "Сначала сохранить .htaccess/серверные правила. Убрать правило, которое отправляет URL со слэшем на главную. Настроить 301: /uslugi/ -> /uslugi, /kontakty/ -> /kontakty, /stati/ -> /stati, /galereya/ -> /galereya."),
             ("P1", "Добавить canonical", "Вывести canonical на главной, разделах, статьях и услугах."),
             ("P2", "Починить генерацию sitemap", "Проверить путь и права записи: публичный sitemap.xml не меняется после генерации."),
-            ("P2", "Добавить favicon для Вебмастера", "Сейчас есть /favicon.png, но /favicon.ico и /favicon.svg отдают 404. Добавить favicon.svg или PNG 120 x 120."),
+            ("P2", "Проверить favicon в Вебмастере", "404 закрыт редиректом на /favicon.png. Если рекомендация останется, добавить реальный SVG или PNG 120 x 120 через файловый доступ."),
             ("P2", "Обновить PHP", "Сайт раскрывает X-Powered-By: PHP/5.6.40. Версия устаревшая."),
         ],
         "facts": [
@@ -97,7 +98,7 @@ REPORTS = [
             "CMS-редиректы работают отдельно: /uslugi.html -> /uslugi и /kontakty.html -> /kontakty.",
             "sitemap.xml остался файлом 2018 года с генератором mysitemapgenerator.com.",
             "robots.txt указывает на этот sitemap.xml.",
-            "/favicon.png отдает 200, /favicon.ico и /favicon.svg отдают 404.",
+            "/favicon.png отдает 200, /favicon.ico и /favicon.svg отдают 301 на /favicon.png.",
         ],
     },
     {
